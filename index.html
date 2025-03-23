@@ -1,0 +1,126 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="https://pyscript.net/releases/2025.3.1/core.css">
+        <script type="module" src="https://pyscript.net/releases/2025.3.1/core.js"></script>
+        <title>Case-Combo</title>
+        <style>
+            body{
+                text-align: center;
+                font-family: Arial, sans-serif;
+            }
+            #input_text{
+        width: 25%;
+        height: 40px;
+        font-size: 18px;
+        padding: 10px;
+        border: 2px solid #26d5f8; 
+        border-radius: 8px;
+        outline: none; 
+        transition: 0.3s; 
+            }
+            #num_combinations {
+                width: 25%;
+                height: 40px;
+                font-size: 18px;
+                padding: 10px;
+                border: 2px solid #26d5f8; 
+                border-radius: 8px;
+                outline: none; 
+                transition: 0.3s; 
+            }
+           #output {
+                width: 80%;
+                height: 300px;
+                font-size: 18px;
+                padding: 10px;
+                border: 2px solid #26d5f8; 
+                border-radius: 8px;
+                outline: none; 
+                transition: 0.3s; 
+            }
+            button {
+                background-color: #1b2324;
+                color: white;
+                padding: 10px 20px;
+                margin: 8px 0;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 18px;
+            }
+            footer {
+                margin-top: 20px;
+            }
+            footer img {
+                width: 30px;
+                height: 30px;
+                margin: 0 10px;
+            }
+        </style>
+    </head>
+    <body style="background-color: aquamarine;">
+        <h1>Case Combination Generator</h1>
+
+        <input type="text" id="input_text" placeholder="Enter text">
+        <br>
+        <br>
+        <input type="number" id="num_combinations" placeholder="Enter number of combinations">
+        <button py-click="generate_combinations">Generate</button>
+        
+    
+        <h2>Results:</h2>
+        <button py-click="copy_to_clipboard">Copy to Clipboard</button>
+        <br>
+        <textarea id="output" rows="500" cols="50" readonly></textarea>
+
+        <br>
+        <button py-click="change_bg">Change Background</button>
+        <h3>⬆️Click to Change Background⬆️</h3>
+
+       <py-script>
+        from itertools import product
+        import random
+        from js import document, navigator , alert
+
+        def change_bg(event=None):
+            colors = ["#FF5733", "#33FF57", "#3357FF", "#FFD700", "#FF69B4", "#90EE90"]
+            document.body.style.backgroundColor = random.choice(colors)
+
+        def generate_combinations(event=None):
+            input_text = document.getElementById("input_text").value
+            num_combinations = document.getElementById("num_combinations").value
+            if not input_text.strip():
+                alert("Please enter some text!")
+                return
+            if not num_combinations.isdigit() or int(num_combinations) <= 0:
+                alert("Please enter a valid number of combinations!")
+                return
+            
+            num_combinations = int(num_combinations)
+            cases = [(c.lower(), c.upper()) if c.isalpha() else (c,) for c in input_text]
+            combinations = [''.join(p) for p in product(*cases)]
+            
+            # Display results in the textarea
+            document.getElementById("output").value = "\n".join(combinations[:num_combinations])
+
+        def copy_to_clipboard(event=None):
+            output_text = document.getElementById("output").value
+            if not output_text.strip():
+                alert("No results to copy!")
+                return
+            
+            navigator.clipboard.writeText(output_text)
+            alert("Results copied to clipboard!")
+
+            
+        </py-script>
+        <footer>
+            <a href="https://www.linkedin.com/in/hatim-bohra-389004249/" target="_blank">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png" alt="LinkedIn">
+            </a>
+            <a href="https://github.com/Hatim5353" target="_blank">
+                <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub">
+            </a>
+        </footer>
+    </body>
+</html>
